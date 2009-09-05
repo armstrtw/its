@@ -207,8 +207,8 @@ unionIts <- function(x,y)
         n                       <- length(alldates)
         m                       <- m1+m2
         united                  <- matrix(NA,nrow=n,ncol=m)
-        united[match(dates1,alldates),1:m1] <- x
-        united[match(dates2,alldates),(m1+1):m] <- y
+        if(m1>0) united[match(dates1,alldates),1:m1] <- x
+        if(m2>0) united[match(dates2,alldates),(m1+1):m] <- y
         result <- its(united,dates=alldates,names=allnames)
     }
     if(is.null(x)) {result <- y}
