@@ -220,31 +220,29 @@ setMethod("union",signature(x="its",y="NULL"),unionIts)
 setMethod("union",signature(x="NULL",y="its"),unionIts)
 
 ##intersect-method---------------------------------------------------
-intersectIts <- function(x,y)
-{
-    if(!is.null(x)&!is.null(y))
-    {
-        dates1                  <- x@dates
-        dates2                  <- y@dates
-        alldates                <- sort(intersect(dates1,dates2))
-        class(alldates)         <- class(x@dates)
-        allnames                <- c(dimnames(x)[[2]],dimnames(y)[[2]])
-        m1                      <- dim(x)[2]
-        m2                      <- dim(y)[2]
-        n                       <- length(alldates)
-        m                       <- m1+m2
-        united                  <- matrix(NA,n,m)
-        drows1                  <- sort(match(dates1,alldates))
-        drows2                  <- sort(match(dates2,alldates))
-        srows1                  <- sort(match(alldates,dates1))
-        srows2                  <- sort(match(alldates,dates2))
-        united[drows1,1:m1]     <- x[srows1,,drop=FALSE]
-        united[drows2,(m1+1):m] <- y[srows2,,drop=FALSE]
-        result <- its(united,dates=alldates,names=allnames)
-    }
-    if(is.null(x)) {result <- y}
-    if(is.null(y)) {result <- x}
-    return(result)
+intersectIts <- function(x,y) {
+  if( !is.null(x) & !is.null(y) ) {
+    dates1                  <- x@dates
+    dates2                  <- y@dates
+    alldates                <- sort(intersect(dates1,dates2))
+    class(alldates)         <- class(x@dates)
+    allnames                <- c(dimnames(x)[[2]],dimnames(y)[[2]])
+    m1                      <- dim(x)[2]
+    m2                      <- dim(y)[2]
+    n                       <- length(alldates)
+    m                       <- m1+m2
+    united                  <- matrix(NA,n,m)
+    drows1                  <- sort(match(dates1,alldates))
+    drows2                  <- sort(match(dates2,alldates))
+    srows1                  <- sort(match(alldates,dates1))
+    srows2                  <- sort(match(alldates,dates2))
+    united[drows1,1:m1]     <- x[srows1,,drop=FALSE]
+    united[drows2,(m1+1):m] <- y[srows2,,drop=FALSE]
+    result <- its(united,dates=alldates,names=allnames)
+  }
+  if(is.null(x)) {result <- y}
+  if(is.null(y)) {result <- x}
+  return(result)
 }
 setMethod("intersect",signature(x="its",y="its"),intersectIts)
 setMethod("intersect",signature(x="its",y="NULL"),intersectIts)
@@ -395,19 +393,19 @@ lagdistIts <- function(x,kmin,kmax)
 }
 
 ##alignedIts-function---------------------------------------------
-alignedIts <- function(obj1,obj2,print=FALSE)
-{
-    if (!inherits(obj1, "its")&inherits(obj2, "its")) stop("function is only valid for objects of class 'its'")
+alignedIts <- function(obj1,obj2,print=FALSE) {
+    if( !inherits(obj1, "its") & inherits(obj2, "its") )
+      stop("function is only valid for objects of class 'its'")
+
     ##takes the intersection of the dates and extracts same dates for both
     mat <- intersectIts(obj1,obj2)
     obj1a <- mat[,1:ncol(obj1),drop=FALSE]
     obj2a <- mat[,(ncol(obj1)+1):ncol(mat),drop=FALSE]
-    if(print)
-    {
-        print(paste("inputs number of rows",nrow(obj1),nrow(obj2),"; output number of rows",nrow(mat)))
-        print(paste("inputs number of cols",ncol(obj1),ncol(obj2),"; output number of cols",ncol(obj1a),ncol(obj2a)))
+    if(print) {
+      print(paste("inputs number of rows",nrow(obj1),nrow(obj2),"; output number of rows",nrow(mat)))
+      print(paste("inputs number of cols",ncol(obj1),ncol(obj2),"; output number of cols",ncol(obj1a),ncol(obj2a)))
     }
-    return(list(obj1a,obj2a))
+    list(obj1a,obj2a)
 }
 
 ##appendIts-function-------------------------------------------------
@@ -494,12 +492,12 @@ newIts <- function(x=NA,
     }
 
     if(missing(end)) {
-        end <- format(as.Date(start,format=its.format())+9,format=its.format())
-        end.p <- as.POSIXct(x=strptime(end,format=format),tz=tz)
+      end <- format(as.Date(start,format=its.format()) + 99,format=its.format())
+      end.p <- as.POSIXct(x=strptime(end,format=format),tz=tz)
     } else if(mode(end)=="character") {
-        end.p <- as.POSIXct(x=strptime(end,format=format),tz=tz)
+      end.p <- as.POSIXct(x=strptime(end,format=format),tz=tz)
     } else {
-        end.p <- as.POSIXct(end)
+      end.p <- as.POSIXct(end)
     }
 
     dates <- seq(from=start.p,by=by,to=end.p)
